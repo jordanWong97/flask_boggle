@@ -41,6 +41,19 @@ function displayBoard(board) {
   $table.append($body);
 }
 
+$('#newWordForm').on('submit', sendWord);
+
+async function sendWord(evt) {
+
+  evt.preventDefault();
+  const wordInput = $('#wordInput').val();
+  debugger;
+  let response = await axios.post("/api/score-word", {
+    gameId,
+    word: wordInput
+  });
+
+}
 
 start();
 
