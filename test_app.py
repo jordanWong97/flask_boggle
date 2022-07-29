@@ -43,3 +43,25 @@ class BoggleAppTestCase(TestCase):
             self.assertIsInstance(json['gameId'], str)
             self.assertIsInstance(games[json['gameId']], BoggleGame)
             # write a test for this route
+
+    def test_api_score_word(self):
+        """Test checking word on board"""
+
+        with self.client as client:
+            new_game_resp = client.post('/api/new-game')
+
+            new_game_json = new_game_resp.get_json()
+
+            gameId = new_game_json['gameId']
+
+            games[gameId].board = [['C','A','T'],
+                                    ['E','F','G'],
+                                    ['H','I','J']]
+
+            score_resp = client.post('/api/score-word',
+                                     json = {
+                                        'gameId': gameId,
+                                        'word': 'CAT'
+                                     })
+            score_resp_json = score_resp.get_json()
+            self.assertEqual(score_resp_json['result'], 'ok')

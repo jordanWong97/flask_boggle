@@ -35,8 +35,8 @@ def score_word():
     """Accepts post request with JSON(gameId,word) checks if word is legal """
 
     #should be in wordlist, findable on board
-    word = request.json(word)
-    gameId = request.json(gameId)
+    word = request.json["word"]
+    gameId = request.json["gameId"]
     curent_game = games[gameId]
     if curent_game.is_word_in_word_list(word):
         if curent_game.check_word_on_board(word):
