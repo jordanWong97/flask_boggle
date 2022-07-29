@@ -30,18 +30,19 @@ def new_game():
 
     return jsonify(info)
 
+
 @app.post('/api/score-word')
 def score_word():
     """Accepts post request with JSON(gameId,word) checks if word is legal """
 
-    #should be in wordlist, findable on board
-    word = request.json["word"]
+    # should be in wordlist, findable on board
+    word = request.json["word"].upper()
     gameId = request.json["gameId"]
     curent_game = games[gameId]
-    if curent_game.is_word_in_word_list(word):
-        if curent_game.check_word_on_board(word):
-            return jsonify({'result': 'ok'})
-        else:
-            return jsonify({'result': 'not-on-board'})
-    else:
+
+    if not curent_game.is_word_in_word_list(word):
         return jsonify({'result': 'not-word'})
+    elif not curent_game.check_word_on_board(word):
+        return jsonify({'result': 'not-on-board'})
+    else:
+        return jsonify({'result': 'ok'})
