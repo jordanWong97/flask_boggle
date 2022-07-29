@@ -19,7 +19,7 @@ async function start() {
   displayBoard(board);
 }
 
-/** Display board */
+/** Display board appends rows and cells for letters from server*/
 
 function displayBoard(board) {
   $table.empty();
@@ -41,19 +41,50 @@ function displayBoard(board) {
   $table.append($body);
 }
 
-$('#newWordForm').on('submit', sendWord);
+$('#newWordForm').on('submit', handleSubmit);
 
-async function sendWord(evt) {
+/** sends word to server, returns response */
 
-  evt.preventDefault();
-  const wordInput = $('#wordInput').val();
-  debugger;
+async function sendWord() {
+
   let response = await axios.post("/api/score-word", {
     gameId,
-    word: wordInput
+    word: $wordInput.val()
   });
 
+  return response;
 }
+
+/** adds valid words to word list on right side of page */
+
+function appendGoodWords() {
+  $playedWords.append(`<li>${$wordInput.val()}</li>`);
+}
+
+/** shows response result if word is not valid */
+
+function displayIllegalPlay(response) {
+  //take response from sendWord and display on msg $message
+  //use reg expression to stringify result msg
+  const msg = response.data.result.replace(/\-/gi, " ");
+  $message.text(msg);
+}
+
+
+async function handleSubmit(evt) {
+
+  evt.preventDefault();
+  $message.empty();
+  const response = await sendWord();
+  if (response.data.result === 'ok') {
+    appendGoodWords();
+  } else {
+    displayIllegalPlay(response);
+  }
+}
+
+
+
 
 start();
 
