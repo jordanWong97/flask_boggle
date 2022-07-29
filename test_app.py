@@ -26,7 +26,7 @@ class BoggleAppTestCase(TestCase):
             html = response.get_data(as_text=True)
 
             self.assertEqual(response.status_code, 200)
-            self.assertIn('<table class="board">', html)
+            self.assertIn('<table class="board"', html)
 
             # test that you're getting a template
 
