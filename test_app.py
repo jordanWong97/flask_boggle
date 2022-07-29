@@ -54,14 +54,30 @@ class BoggleAppTestCase(TestCase):
 
             gameId = new_game_json['gameId']
 
-            games[gameId].board = [['C','A','T'],
-                                    ['E','F','G'],
-                                    ['H','I','J']]
+            games[gameId].board = [['C', 'A', 'T'],
+                                   ['E', 'F', 'G'],
+                                   ['H', 'I', 'J']]
 
             score_resp = client.post('/api/score-word',
-                                     json = {
-                                        'gameId': gameId,
-                                        'word': 'CAT'
+                                     json={
+                                         'gameId': gameId,
+                                         'word': 'CAT'
                                      })
             score_resp_json = score_resp.get_json()
             self.assertEqual(score_resp_json['result'], 'ok')
+
+            score_resp = client.post('/api/score-word',
+                                     json={
+                                         'gameId': gameId,
+                                         'word': 'RAT'
+                                     })
+            score_resp_json = score_resp.get_json()
+            self.assertEqual(score_resp_json['result'], 'not-on-board')
+
+            score_resp = client.post('/api/score-word',
+                                     json={
+                                         'gameId': gameId,
+                                         'word': 'JBLPL'
+                                     })
+            score_resp_json = score_resp.get_json()
+            self.assertEqual(score_resp_json['result'], 'not-word')
