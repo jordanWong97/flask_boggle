@@ -38,11 +38,15 @@ def score_word():
     # should be in wordlist, findable on board
     word = request.json["word"].upper()
     gameId = request.json["gameId"]
-    curent_game = games[gameId]
+    current_game = games[gameId]
 
-    if not curent_game.is_word_in_word_list(word):
+    if not current_game.is_word_in_word_list(word):
         return jsonify({'result': 'not-word'})
-    elif not curent_game.check_word_on_board(word):
+    elif not current_game.check_word_on_board(word):
         return jsonify({'result': 'not-on-board'})
     else:
-        return jsonify({'result': 'ok'})
+        score = current_game.play_and_score_word(word)
+        total_score = current_game.score
+        return jsonify({'result': 'ok' ,
+                        'word_score' : f'{score}' ,
+                        'total_score': f'{total_score}'})
